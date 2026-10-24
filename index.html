@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reading Atlas — Find Your Next Book, Wherever It's From</title>
+  <meta name="description" content="Reading Atlas helps readers in different regions discover books they will love. Browse by language and region, explore curated shelves, search millions of titles — all powered by live data from Open Library." />
+  <meta property="og:title" content="Reading Atlas — Find Your Next Book" />
+  <meta property="og:description" content="Browse books by language and region, explore shelves, and build your reading list." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230078d4'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Georgia'>R</text></svg>" />
+  <link rel="preconnect" href="https://openlibrary.org" />
+  <link rel="preconnect" href="https://covers.openlibrary.org" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#languages">Skip to language browser</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#" id="brand-home" aria-label="Reading Atlas home">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span class="brand-name">Reading Atlas</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-link is-active" data-view="discover" type="button">Discover</button>
+        <button class="nav-link" data-view="finder" type="button">🧭 Find my book</button>
+        <button class="nav-link" data-view="shelf" type="button">My Shelf <span class="shelf-count" id="shelf-count">0</span></button>
+      </nav>
+      <form class="header-search" id="header-search" role="search" aria-label="Search books">
+        <input id="search-input" type="search" placeholder="Search titles, authors, ISBN…" aria-label="Search books" autocomplete="off" />
+        <select id="search-lang" aria-label="Language filter">
+          <option value="">All languages</option>
+          <option value="eng">English</option>
+          <option value="chi">中文</option>
+          <option value="jpn">日本語</option>
+          <option value="spa">Español</option>
+          <option value="fre">Français</option>
+          <option value="ger">Deutsch</option>
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">Search</button>
+      </form>
+      <button class="btn btn-primary btn-sm header-cta" id="surprise-btn" type="button">🎲 Surprise me</button>
+    </div>
+  </header>
+
+  <main id="view-discover">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Reading Atlas for readers</p>
+          <h1 class="hero-title">Discover your next great read — wherever in the world it's from.</h1>
+          <p class="hero-sub">One catalog, six language regions, millions of books. Browse literature by region, search the open catalog, and keep your personal shelf — powered by live Open Library data.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="#languages">Browse by language</a>
+            <button class="btn btn-secondary btn-lg" id="hero-surprise" type="button">Surprise me</button>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Featured book">
+          <div class="visual-card">
+            <p class="feature-label">Featured from the open shelves</p>
+            <div class="feature-card" id="feature-card" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS BAND -->
+    <section class="stats-band" aria-label="Catalog statistics">
+      <div class="container">
+        <dl class="hero-stats">
+          <div><dt id="stat-fiction">–</dt><dd>works in Fiction</dd></div>
+          <div><dt id="stat-mystery">–</dt><dd>works in Mystery</dd></div>
+          <div><dt id="stat-fantasy">–</dt><dd>works in Fantasy</dd></div>
+          <div><dt id="stat-science">–</dt><dd>works in Science</dd></div>
+          <div><dt>6</dt><dd>language regions</dd></div>
+          <div><dt>100%</dt><dd>live open data</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- LANGUAGE / REGION BROWSER — main focus feature -->
+    <section class="langs-section" id="languages" aria-labelledby="langs-heading">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">The main collection</p>
+            <h2 id="langs-heading">Browse by language &amp; region</h2>
+            <p class="section-sub">Six reading regions, every book live from Open Library. Select a language to walk its shelves.</p>
+          </div>
+        </div>
+        <div class="lang-tabs" id="lang-tabs" role="tablist" aria-label="Languages and regions"></div>
+        <p class="shelf-meta" id="lang-meta" aria-live="polite"></p>
+        <div class="shelf-wrap">
+          <button class="shelf-arrow left" id="lang-prev" type="button" aria-label="Scroll shelf left">‹</button>
+          <div class="book-shelf" id="lang-shelf" tabindex="0" aria-label="Books in selected language"></div>
+          <button class="shelf-arrow right" id="lang-next" type="button" aria-label="Scroll shelf right">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CURATED SHELVES -->
+    <section class="shelves-section" aria-labelledby="shelves-heading">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Curated shelves</p>
+            <h2 id="shelves-heading">Explore the catalog</h2>
+            <p class="section-sub">Subject shelves drawn live from the catalog. Scroll sideways through each collection.</p>
+          </div>
+        </div>
+        <div id="subject-shelves"></div>
+      </div>
+    </section>
+
+    <!-- AUTHOR SPOTLIGHT -->
+    <section class="authors-section" aria-labelledby="authors-heading">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Author spotlight</p>
+            <h2 id="authors-heading">Writers readers love</h2>
+            <p class="section-sub">Author profiles live from the Open Library catalog — select any writer to see their books.</p>
+          </div>
+        </div>
+        <div class="shelf-wrap">
+          <button class="shelf-arrow left" id="authors-prev" type="button" aria-label="Scroll authors left">‹</button>
+          <div class="author-shelf" id="author-shelf" tabindex="0" aria-label="Featured authors"></div>
+          <button class="shelf-arrow right" id="authors-next" type="button" aria-label="Scroll authors right">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEARCH RESULTS -->
+    <section class="results-section" id="results" aria-labelledby="results-heading" hidden>
+      <div class="container">
+        <div class="results-head">
+          <div>
+            <p class="eyebrow">Search</p>
+            <h2 id="results-heading">Results</h2>
+            <p class="results-meta" id="results-meta"></p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="clear-search" type="button">Clear search</button>
+        </div>
+        <ol class="result-list" id="result-list"></ol>
+        <div class="load-more-wrap">
+          <button class="btn btn-secondary" id="load-more" type="button" hidden>Load more</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUE PROPS -->
+    <section class="about-section">
+      <div class="container">
+        <p class="eyebrow">Why Reading Atlas</p>
+        <h2>Built for how readers actually discover books</h2>
+        <div class="steps">
+          <div class="step">
+            <h3>Discover by region</h3>
+            <p>Start from a language region instead of a blank search box. See what readers across six languages are reading — all live from Open Library.</p>
+          </div>
+          <div class="step">
+            <h3>Search with precision</h3>
+            <p>Search by title, author, or ISBN across millions of records, filtered by language, with full descriptions and subject data on every book.</p>
+          </div>
+          <div class="step">
+            <h3>Keep your shelf</h3>
+            <p>Save anything to My Shelf on this device. No account, no tracking — your reading list stays yours.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MY SHELF VIEW -->
+  <main id="view-shelf" hidden>
+    <section class="results-section">
+      <div class="container">
+        <p class="eyebrow">Your collection</p>
+        <h2>My Shelf</h2>
+        <p class="section-sub">Books you've saved on this device.</p>
+        <div class="book-shelf static" id="shelf-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FIND MY BOOK: step-by-step wizard -->
+  <main id="view-finder" hidden>
+    <section class="finder-hero">
+      <div class="container">
+        <p class="eyebrow">Guided search</p>
+        <h2>Find my book</h2>
+        <p class="section-sub">Answer six quick questions — one at a time — then a few yes/no questions, and we will pinpoint your next read from the live Open Library catalog.</p>
+        <div class="wizard">
+          <ol class="wiz-steps" id="wiz-steps" aria-label="Progress"></ol>
+          <div class="wiz-panel" id="wiz-panel"></div>
+          <div class="wiz-nav">
+            <button class="btn btn-ghost btn-sm" id="wiz-back" type="button" hidden>← Back</button>
+            <button class="btn btn-ghost btn-sm" id="wiz-restart" type="button" hidden>↻ Start over</button>
+          </div>
+          <div class="wiz-results" id="wiz-results" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- DETAIL MODAL -->
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" type="button" aria-label="Close details">✕</button>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-heading">Reading Atlas</p>
+          <p class="footer-note">Book discovery by language and region, powered by open data.</p>
+        </div>
+        <div class="footer-col">
+          <p class="footer-heading">Explore</p>
+          <ul>
+            <li><a href="#languages">Browse by language</a></li>
+            <li><a href="#shelves-heading">Curated shelves</a></li>
+            <li><a href="#" id="footer-shelf">My Shelf</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <p class="footer-heading">Data sources</p>
+          <ul>
+            <li><a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a></li>
+            <li><a href="https://openlibrary.org/dev/docs/api/search" target="_blank" rel="noopener">Search API docs</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Reading Atlas · All book data and covers are served live by <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>. No data on this site is mocked or invented.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
